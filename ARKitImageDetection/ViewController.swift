@@ -130,14 +130,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 //node.addChildNode(sphereNode)
                 //here
                 let bundle = Bundle.main
-                let path = bundle.path(forResource: "Assets.xcassets/ramses.zip/rameses.obj", ofType: "obj")
-                print(path)
-                let url = NSURL(fileURLWithPath: path!)
-                let asset = MDLAsset(url: url as URL)
                 
-                let geoScene = SCNScene(mdlAsset: asset)
-               // let  geoScene = SCNScene(MDLObject: )
-                node.addChildNode(geoScene.rootNode.childNode(withName: "MDL_OBJ_rameses", recursively: true) ?? sphereNode)
+                if let path = bundle.path(forResource: "rameses.obj", ofType: "obj")
+                {
+                    do
+                    {
+                        let contents = try String(contentsOfFile: path)
+                        print(contents)
+                        
+                        let url = NSURL(fileURLWithPath: path)
+                        let asset = MDLAsset(url: url as URL)
+                        
+                        let geoScene = SCNScene(mdlAsset: asset)
+                        // let  geoScene = SCNScene(MDLObject: )
+                        node.addChildNode(geoScene.rootNode.childNode(withName: "MDL_OBJ_rameses", recursively: true) ?? sphereNode)
+                        
+                    }
+                    catch
+                    {
+                        print("Contents could not be loaded.")
+                    }
+                }
+                else
+                {
+                    print("newTest.txt not found.")
+                }
  
             }
         

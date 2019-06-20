@@ -12,7 +12,7 @@
 		3929C4911E89EC2C00E00B60 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3929C48F1E89EC2C00E00B60 /* Main.storyboard */; };
 		39D8DC1B1E8ADAE600386B05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39D8DC1A1E8ADAE600386B05 /* LaunchScreen.storyboard */; };
 		BEDCC86722BB6BE900919337 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3929C4921E89EC2C00E00B60 /* Assets.xcassets */; };
-		BEDCC86B22BB6CBB00919337 /* rameses.obj in Resources */ = {isa = PBXBuildFile; fileRef = BEDCC86A22BB6CBB00919337 /* rameses.obj */; };
+		BEDCC86F22BC05CB00919337 /* rameses.obj in Resources */ = {isa = PBXBuildFile; fileRef = BEDCC86E22BC05CB00919337 /* rameses.obj */; };
 		C41366B91EB80DD400EC054A /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41366B81EB80DD400EC054A /* StatusViewController.swift */; };
 		C8C12A711F29277B00B011FE /* ViewController+ARSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C12A701F29277B00B011FE /* ViewController+ARSessionDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -27,7 +27,7 @@
 		3929C4971E89EC2C00E00B60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		39D8DC1A1E8ADAE600386B05 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9ECB75A09ECB71B000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
-		BEDCC86A22BB6CBB00919337 /* rameses.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rameses.obj; path = Assets.xcassets/ramses.zip/rameses.obj; sourceTree = "<group>"; };
+		BEDCC86E22BC05CB00919337 /* rameses.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rameses.obj; path = ramses.zip/rameses.obj; sourceTree = SOURCE_ROOT; };
 		C41366B81EB80DD400EC054A /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
 		C8C12A701F29277B00B011FE /* ViewController+ARSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+ARSessionDelegate.swift"; sourceTree = "<group>"; };
 		FEE43140FEE56DE000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -55,7 +55,7 @@
 		1488324C1EFC3ED00043E0AB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				BEDCC86A22BB6CBB00919337 /* rameses.obj */,
+				BEDCC86E22BC05CB00919337 /* rameses.obj */,
 				3929C4921E89EC2C00E00B60 /* Assets.xcassets */,
 				3929C4971E89EC2C00E00B60 /* Info.plist */,
 				3929C48F1E89EC2C00E00B60 /* Main.storyboard */,
@@ -172,7 +172,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEDCC86B22BB6CBB00919337 /* rameses.obj in Resources */,
+				BEDCC86F22BC05CB00919337 /* rameses.obj in Resources */,
 				BEDCC86722BB6BE900919337 /* Assets.xcassets in Resources */,
 				39D8DC1B1E8ADAE600386B05 /* LaunchScreen.storyboard in Resources */,
 				3929C4911E89EC2C00E00B60 /* Main.storyboard in Resources */,
