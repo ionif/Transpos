@@ -9,6 +9,7 @@
 import ARKit
 import SceneKit
 import UIKit
+import SceneKit.ModelIO
 
 class ViewController: UIViewController, ARSCNViewDelegate {
     
@@ -127,9 +128,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 sphereNode.position = planeNode.position
                 node.addChildNode(sphereNode)
                 //node.addChildNode(sphereNode)
-                /*let geoScene = SCNScene(named: "/Users/alex/Downloads/DetectingImagesInAnARExperience/ARKitImageDetection/Resources/Assets.xcassets/ramses.zip/rameses.obj")
-                node.addChildNode(geoScene!.rootNode.childNode(withName: "MDL_OBJ_rameses", recursively: true) ?? sphereNode)
- */
+                //here
+                let bundle = Bundle.main
+                let path = bundle.path(forResource: "Assets.xcassets/ramses.zip/rameses.obj", ofType: "obj")
+                print(path)
+                let url = NSURL(fileURLWithPath: path!)
+                let asset = MDLAsset(url: url as URL)
+                
+                let geoScene = SCNScene(mdlAsset: asset)
+               // let  geoScene = SCNScene(MDLObject: )
+                node.addChildNode(geoScene.rootNode.childNode(withName: "MDL_OBJ_rameses", recursively: true) ?? sphereNode)
+ 
             }
         
         }
