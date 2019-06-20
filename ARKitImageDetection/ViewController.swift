@@ -1,9 +1,10 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-Main view controller for the AR experience.
-*/
+//
+//  ViewController.swift
+//  graffito
+//
+//  Created by Alex Ionkov on 6/17/19.
+//  Copyright © 2019 Alex Ionkov. All rights reserved.
+//
 
 import ARKit
 import SceneKit
@@ -15,9 +16,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @IBOutlet weak var blurView: UIVisualEffectView!
     
+    var nodeModel:SCNNode!
+    let nodeName = "cherub"
+    
     /// The view controller that displays the status and "restart experience" UI.
     lazy var statusViewController: StatusViewController = {
-        return childViewControllers.lazy.compactMap({ $0 as? StatusViewController }).first!
+        return children.lazy.compactMap({ $0 as? StatusViewController }).first!
     }()
     
     /// A serial queue for thread safety when modifying the SceneKit node graph.
@@ -36,6 +40,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         sceneView.delegate = self
         sceneView.session.delegate = self
+        sceneView.showsStatistics = true
+        //antialiasing
+        sceneView.antialiasingMode = .multisampling4X
 
         // Hook up status view controller callback(s).
         statusViewController.restartExperienceHandler = { [unowned self] in
@@ -78,7 +85,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
         statusViewController.scheduleMessage("Look around to detect images", inSeconds: 7.5, messageType: .contentPlacement)
 	}
-
+    
     // MARK: - ARSCNViewDelegate (Image detection results)
     /// - Tag: ARImageAnchor-Visualizing
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
@@ -107,6 +114,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             // Add the plane visualization to the scene.
             node.addChildNode(planeNode)
+            
+            //sphere
+            if referenceImage.name == "iPad Pro 12.9-inch" {
+                let sphere = SCNSphere(radius: 0.03)
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor.black
+                sphere.materials = [material]
+            
+                let sphereNode = SCNNode(geometry: sphere)
+                sphereNode.opacity = 1
+                sphereNode.position = planeNode.position
+                node.addChildNode(sphereNode)
+                //node.addChildNode(sphereNode)
+                /*let geoScene = SCNScene(named: "/Users/alex/Downloads/DetectingImagesInAnARExperience/ARKitImageDetection/Resources/Assets.xcassets/ramses.zip/rameses.obj")
+                node.addChildNode(geoScene!.rootNode.childNode(withName: "MDL_OBJ_rameses", recursively: true) ?? sphereNode)
+ */
+            }
+        
         }
 
         DispatchQueue.main.async {
@@ -126,4 +151,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             .removeFromParentNode()
         ])
     }
+}
+
+extension SCNNode {
+    
+    convenience init(named name: String) {
+        self.init()
+        
+        guard let scene = SCNScene(named: name) else {
+            return
+        }
+        
+        for childNode in scene.rootNode.childNodes {
+            addChildNode(childNode)
+        }
+    }
+    
 }

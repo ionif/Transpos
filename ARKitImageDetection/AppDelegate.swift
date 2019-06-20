@@ -1,9 +1,10 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-Application's delegate.
-*/
+//
+//  AppDelegate.swift
+//  graffito
+//
+//  Created by Alex Ionkov on 6/17/19.
+//  Copyright © 2019 Alex Ionkov. All rights reserved.
+//
 
 import UIKit
 import ARKit
@@ -12,7 +13,7 @@ import ARKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         guard ARWorldTrackingConfiguration.isSupported else {
             fatalError("""
                 ARKit is not available on this device. For apps that require ARKit
