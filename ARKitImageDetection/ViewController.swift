@@ -122,51 +122,38 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 let material = SCNMaterial()
                 material.diffuse.contents = UIColor.black
                 sphere.materials = [material]
-            
+                
                 let sphereNode = SCNNode(geometry: sphere)
                 sphereNode.opacity = 1
                 sphereNode.position = planeNode.position
                 node.addChildNode(sphereNode)
                 //node.addChildNode(sphereNode)
-                //here
-                let bundle = Bundle.main
-                
-                if let path = bundle.path(forResource: "rameses.obj", ofType: "obj")
-                {
-                    do
-                    {
-                        let contents = try String(contentsOfFile: path)
-                        print(contents)
-                        
-                        let url = NSURL(fileURLWithPath: path)
-                        let asset = MDLAsset(url: url as URL)
-                        
-                        let geoScene = SCNScene(mdlAsset: asset)
-                        // let  geoScene = SCNScene(MDLObject: )
-                        node.addChildNode(geoScene.rootNode.childNode(withName: "MDL_OBJ_rameses", recursively: true) ?? sphereNode)
-                        
-                    }
-                    catch
-                    {
-                        print("Contents could not be loaded.")
-                    }
-                }
-                else
-                {
-                    print("newTest.txt not found.")
-                }
- 
+                self.addModel(fileName: "monalisa.dae")
             }
-        
+            
         }
-
+        
         DispatchQueue.main.async {
             let imageName = referenceImage.name ?? ""
             self.statusViewController.cancelAllScheduledMessages()
             self.statusViewController.showMessage("Detected image “\(imageName)”")
         }
     }
-
+    
+    func addModel(x: Float = 0, y: Float = 0, z: Float = -0.5, fileName: String) {
+        guard let modelScene = SCNScene(named: fileName) else { return }
+        let modelNode = SCNNode()
+        let modelSceneChildNodes = modelScene.rootNode.childNodes
+        
+        for childNode in modelSceneChildNodes {
+            modelNode.addChildNode(childNode)
+        }
+        
+        modelNode.position = SCNVector3(x, y, z)
+        modelNode.scale = SCNVector3(0.5, 0.5, 0.5)
+        sceneView.scene.rootNode.addChildNode(modelNode)
+    }
+    
     var imageHighlightAction: SCNAction {
         return .sequence([
             .wait(duration: 0.25),
@@ -175,7 +162,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             .fadeOpacity(to: 0.85, duration: 0.25),
             .fadeOut(duration: 0.5),
             .removeFromParentNode()
-        ])
+            ])
     }
 }
 
@@ -194,3 +181,4 @@ extension SCNNode {
     }
     
 }
+
