@@ -137,7 +137,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
                 node.addChildNode(modelNode)       */
                 
-                self.addModel(fileName: "paperPlane.scn", planeNode:  planeNode, node: node)
+                self.addModel(fileName: "paperPlane.scn", position: planeNode.position, node: node)
                 
             }
             
@@ -151,7 +151,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     //issue with this function is that it adds the child to sceneView.scene.rootNode not node like in renderer
-    func addModel(fileName: String, planeNode: SCNNode, node: SCNNode) {
+    func addModel(fileName: String, position: SCNVector3, node: SCNNode) {
         guard let modelScene = SCNScene(named: fileName) else { return }
         let modelNode = SCNNode()
         let modelSceneChildNodes = modelScene.rootNode.childNodes
@@ -160,7 +160,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             modelNode.addChildNode(childNode)
         }
         
-        modelNode.position = planeNode.position //z-0.2
+        modelNode.position = position //z-0.2
         modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
         node.addChildNode(modelNode)
     }
