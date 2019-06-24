@@ -4,7 +4,6 @@
 //
 //  Created by Alex Ionkov on 6/17/19.
 //  Copyright © 2019 Alex Ionkov. All rights reserved.
-//
 
 import ARKit
 import SceneKit
@@ -16,9 +15,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     @IBOutlet weak var blurView: UIVisualEffectView!
-    
-    var nodeModel:SCNNode!
-    let nodeName = "cherub"
     
     /// The view controller that displays the status and "restart experience" UI.
     lazy var statusViewController: StatusViewController = {
@@ -123,13 +119,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 material.diffuse.contents = UIColor.black
                 sphere.materials = [material]
                 
-                let sphereNode = SCNNode(geometry: sphere)
+                /*let sphereNode = SCNNode(geometry: sphere)
                 sphereNode.opacity = 1
                 sphereNode.position = planeNode.position
-                node.addChildNode(sphereNode)
+                node.addChildNode(sphereNode)*/
                 //node.addChildNode(sphereNode)
-                self.addModel(fileName: "monalisa.dae")
-            }
+                guard let modelScene = SCNScene(named: "paperPlane.scn") else { return }
+                let modelNode = SCNNode()
+                let modelSceneChildNodes = modelScene.rootNode.childNodes
+                
+                for childNode in modelSceneChildNodes {
+                    modelNode.addChildNode(childNode)
+                }
+                
+                modelNode.position = planeNode.position //z-0.2
+                modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
+                node.addChildNode(modelNode)            }
             
         }
         
@@ -140,7 +145,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    func addModel(x: Float = 0, y: Float = 0, z: Float = -0.5, fileName: String) {
+    //issue with this function is that it adds the child to sceneView.scene.rootNode not node like in renderer
+    func addModel(x: Float, y: Float, z: Float, fileName: String) {
         guard let modelScene = SCNScene(named: fileName) else { return }
         let modelNode = SCNNode()
         let modelSceneChildNodes = modelScene.rootNode.childNodes
@@ -149,8 +155,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             modelNode.addChildNode(childNode)
         }
         
-        modelNode.position = SCNVector3(x, y, z)
-        modelNode.scale = SCNVector3(0.5, 0.5, 0.5)
+        modelNode.position = SCNVector3Make(x, y, z) //z-0.2
+        modelNode.scale = SCNVector3(0.05, 0.05, 0.05)
         sceneView.scene.rootNode.addChildNode(modelNode)
     }
     
