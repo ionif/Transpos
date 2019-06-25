@@ -49,10 +49,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.restartExperience()
         }
         
-        let storageRef = self.storage.reference();
-        _ = storageRef.child("3D-Model/");
         
-        //this is where we download all the model files in the 3d-Model folder
         
     }
 
@@ -121,6 +118,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // Add the plane visualization to the scene.
             node.addChildNode(planeNode)
             
+            
+            
+            //this is where we download all the model files in the 3d-Model folder
+
+            
             //sphere
             if referenceImage.name == "iPad Pro 12.9-inch" {
                 let sphere = SCNSphere(radius: 0.03)
@@ -145,13 +147,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 modelNode.position = planeNode.position //z-0.2
                 modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
                 node.addChildNode(modelNode)       */
-                
-                
-                
+        
                 self.addModel(fileName: "paperPlane.scn", position: planeNode.position, node: node)
-                
+
             }
-            
         }
         
         DispatchQueue.main.async {
@@ -163,17 +162,37 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     //issue with this function is that it adds the child to sceneView.scene.rootNode not node like in renderer
     func addModel(fileName: String, position: SCNVector3, node: SCNNode) {
-        guard let modelScene = SCNScene(named: fileName) else { return }
-        let modelNode = SCNNode()
-        let modelSceneChildNodes = modelScene.rootNode.childNodes
         
-        for childNode in modelSceneChildNodes {
-            modelNode.addChildNode(childNode)
+        let storageRef = self.storage.reference();
+        let Model = storageRef.child("3D-Model");
+        
+        let modelRef = Model.child(fileName)
+        
+        // Create local filesystem URL
+        let localURL = URL(string: "3D_models")!
+        
+        // Download to the local filesystem
+        _ = modelRef.write(toFile: localURL) { url, error in
+            if let error = error {
+                // Uh-oh, an error occurred!
+                print(error)
+            } else {
+                // Local file URL for "images/island.jpg" is returned
+                
+                guard let modelScene = SCNScene(named: fileName) else { return }
+                let modelNode = SCNNode()
+                let modelSceneChildNodes = modelScene.rootNode.childNodes
+                
+                for childNode in modelSceneChildNodes {
+                    modelNode.addChildNode(childNode)
+                }
+                
+                modelNode.position = position //z-0.2
+                modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
+                node.addChildNode(modelNode)
+                
+            }
         }
-        
-        modelNode.position = position //z-0.2
-        modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
-        node.addChildNode(modelNode)
     }
     
     var imageHighlightAction: SCNAction {
