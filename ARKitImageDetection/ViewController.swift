@@ -10,10 +10,12 @@ import SceneKit
 import UIKit
 import SceneKit.ModelIO
 import FirebaseStorage
+import FirebaseFirestore
 
 class ViewController: UIViewController, ARSCNViewDelegate {
     
     let storage = Storage.storage();
+    let db = Firestore.firestore()
     
     @IBOutlet var sceneView: ARSCNView!
     
@@ -50,6 +52,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
         
+        let dbRef = storage.reference().child("3D-Model")
+        
+        db.collection("3D-Models").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+                }
+            }
+        }
         
     }
 
@@ -118,35 +131,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // Add the plane visualization to the scene.
             node.addChildNode(planeNode)
             
-            
-            
-            //this is where we download all the model files in the 3d-Model folder
-
-            
             //sphere
             if referenceImage.name == "iPad Pro 12.9-inch" {
                 let sphere = SCNSphere(radius: 0.03)
                 let material = SCNMaterial()
                 material.diffuse.contents = UIColor.black
                 sphere.materials = [material]
-                
-                /*let sphereNode = SCNNode(geometry: sphere)
-                sphereNode.opacity = 1
-                sphereNode.position = planeNode.position
-                node.addChildNode(sphereNode)*/
-                //node.addChildNode(sphereNode)
-               
-                /*guard let modelScene = SCNScene(named: "paperPlane.scn") else { return }
-                let modelNode = SCNNode()
-                let modelSceneChildNodes = modelScene.rootNode.childNodes
-                
-                for childNode in modelSceneChildNodes {
-                    modelNode.addChildNode(childNode)
-                }
-                
-                modelNode.position = planeNode.position //z-0.2
-                modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
-                node.addChildNode(modelNode)       */
         
                 self.addModel(fileName: "paperPlane.scn", position: planeNode.position, node: node)
 
