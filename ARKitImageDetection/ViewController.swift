@@ -9,8 +9,11 @@ import ARKit
 import SceneKit
 import UIKit
 import SceneKit.ModelIO
+import FirebaseStorage
 
 class ViewController: UIViewController, ARSCNViewDelegate {
+    
+    let storage = Storage.storage();
     
     @IBOutlet var sceneView: ARSCNView!
     
@@ -45,6 +48,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         statusViewController.restartExperienceHandler = { [unowned self] in
             self.restartExperience()
         }
+        
+        let storageRef = self.storage.reference();
+        _ = storageRef.child("3D-Model/");
+        
+        //this is where we download all the model files in the 3d-Model folder
+        
     }
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -136,6 +145,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 modelNode.position = planeNode.position //z-0.2
                 modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
                 node.addChildNode(modelNode)       */
+                
+                
                 
                 self.addModel(fileName: "paperPlane.scn", position: planeNode.position, node: node)
                 

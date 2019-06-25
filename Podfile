@@ -7,6 +7,6 @@ target 'ARKitImageDetection' do
 
   # Pods for ARKitImageDetection
    pod 'Firebase/Core'
-
+pod 'Firebase/Storage'
 
 end
