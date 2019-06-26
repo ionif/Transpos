@@ -51,9 +51,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.restartExperience()
         }
         
-        
-        let dbRef = storage.reference().child("3D-Model")
-        
         db.collection("3D-Models").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")

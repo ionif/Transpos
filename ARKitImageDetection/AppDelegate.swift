@@ -14,10 +14,6 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        FirebaseApp.configure()
-        return true
-    }
     /*func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         guard ARWorldTrackingConfiguration.isSupported else {
             fatalError("""
@@ -33,7 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         }
         FirebaseApp.configure()
-        
-        return true
-    }*/
+        */
+    override init() {
+        FirebaseApp.configure()
+    }
+
 }
+
