@@ -17,10 +17,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     let storage = Storage.storage();
     let db = Firestore.firestore();
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     @IBOutlet var sceneView: ARSCNView!
     
     @IBOutlet weak var blurView: UIVisualEffectView!
@@ -60,6 +56,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         db.settings = settings;
         
         downloadModels();
+        downloadRefrenceImages();
         
     }
 
@@ -201,6 +198,34 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     let storageRef = self.storage.reference();
                     
                     let Model = storageRef.child("3D-Model/" + fileName);
+                    
+                    // Create local filesystem URL
+                    let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                    let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
+                    let targetUrl = tempDirectory.appendingPathComponent(fileName)
+                    Model.write(toFile: targetUrl) { (url, error) in
+                        if error != nil {
+                            print("ERROR: \(error!)")
+                        }else{
+                            print("model" + fileName + "downloaded")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func downloadRefrenceImages(){
+        db.collection("RefrenceImages").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    let fileName = document.documentID
+                    
+                    let storageRef = self.storage.reference();
+                    
+                    let Model = storageRef.child("RefrenceImages/" + fileName);
                     
                     // Create local filesystem URL
                     let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
