@@ -13,7 +13,6 @@
 		39D8DC1B1E8ADAE600386B05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39D8DC1A1E8ADAE600386B05 /* LaunchScreen.storyboard */; };
 		86F7DA72707783900E6D59B1 /* Pods_ARKitImageDetection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FED8BBC597407E48C10415B /* Pods_ARKitImageDetection.framework */; };
 		BEDCC86722BB6BE900919337 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3929C4921E89EC2C00E00B60 /* Assets.xcassets */; };
-		BEDCC88622BD829900919337 /* monalisa.dae in Resources */ = {isa = PBXBuildFile; fileRef = BEDCC88522BD829900919337 /* monalisa.dae */; };
 		BEDCC89322C0969E00919337 /* car.dae in Resources */ = {isa = PBXBuildFile; fileRef = BEDCC89022C0969E00919337 /* car.dae */; };
 		BEDCC89422C0969E00919337 /* WALL_CARVING_1_10K.scn in Resources */ = {isa = PBXBuildFile; fileRef = BEDCC89122C0969E00919337 /* WALL_CARVING_1_10K.scn */; };
 		BEDCC89622C0ABE800919337 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BEDCC89522C0ABE800919337 /* GoogleService-Info.plist */; };
@@ -34,7 +33,6 @@
 		6FED8BBC597407E48C10415B /* Pods_ARKitImageDetection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARKitImageDetection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		94101C4FB4846E6F13F60D26 /* Pods-ARKitImageDetection.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARKitImageDetection.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARKitImageDetection/Pods-ARKitImageDetection.release.xcconfig"; sourceTree = "<group>"; };
 		9ECB75A09ECB71B000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
-		BEDCC88522BD829900919337 /* monalisa.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; name = monalisa.dae; path = ../../../../monalisa.dae; sourceTree = "<group>"; };
 		BEDCC89022C0969E00919337 /* car.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = car.dae; sourceTree = "<group>"; };
 		BEDCC89122C0969E00919337 /* WALL_CARVING_1_10K.scn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = WALL_CARVING_1_10K.scn; sourceTree = "<group>"; };
 		BEDCC89522C0ABE800919337 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -139,7 +137,6 @@
 			children = (
 				BEDCC89022C0969E00919337 /* car.dae */,
 				BEDCC89122C0969E00919337 /* WALL_CARVING_1_10K.scn */,
-				BEDCC88522BD829900919337 /* monalisa.dae */,
 			);
 			path = 3D_models;
 			sourceTree = "<group>";
@@ -187,7 +184,7 @@
 				TargetAttributes = {
 					3929C4871E89EC2C00E00B60 = {
 						CreatedOnToolsVersion = 9.0;
-						DevelopmentTeam = EUQ333Q5X2;
+						DevelopmentTeam = 6ZQ2S72G42;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -216,7 +213,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEDCC88622BD829900919337 /* monalisa.dae in Resources */,
 				BEDCC89622C0ABE800919337 /* GoogleService-Info.plist in Resources */,
 				BEDCC86722BB6BE900919337 /* Assets.xcassets in Resources */,
 				39D8DC1B1E8ADAE600386B05 /* LaunchScreen.storyboard in Resources */,
@@ -460,10 +456,10 @@
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = EUQ333Q5X2;
+				DEVELOPMENT_TEAM = 6ZQ2S72G42;
 				INFOPLIST_FILE = "$(SRCROOT)/ARKitImageDetection/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = jas.arproj;
+				PRODUCT_BUNDLE_IDENTIFIER = graffito.alexi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -480,10 +476,10 @@
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = EUQ333Q5X2;
+				DEVELOPMENT_TEAM = 6ZQ2S72G42;
 				INFOPLIST_FILE = "$(SRCROOT)/ARKitImageDetection/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = jas.arproj;
+				PRODUCT_BUNDLE_IDENTIFIER = graffito.alexi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

@@ -147,7 +147,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    //issue with this function is that it adds the child to sceneView.scene.rootNode not node like in renderer
     func addModel(fileName: String, position: SCNVector3, node: SCNNode) {
         
         let storageRef = self.storage.reference();
