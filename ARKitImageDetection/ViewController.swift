@@ -151,15 +151,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func addModel(fileName: String, position: SCNVector3, node: SCNNode) {
         
         let storageRef = self.storage.reference();
-        let Model = storageRef.child("3D-Model");
-        
-        let modelRef = Model.child(fileName)
+        let Model = storageRef.child("3D-Model/" + fileName);
         
         // Create local filesystem URL
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
         let targetUrl = tempDirectory.appendingPathComponent(fileName)
-        modelRef.write(toFile: targetUrl) { (url, error) in
+        Model.write(toFile: targetUrl) { (url, error) in
             if error != nil {
                 print("ERROR: \(error!)")
             }else{
