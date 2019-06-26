@@ -207,7 +207,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         if error != nil {
                             print("ERROR: \(error!)")
                         }else{
-                            print("model" + fileName + "downloaded")
+                            print("model " + fileName + " downloaded")
                         }
                     }
                 }
@@ -235,7 +235,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         if error != nil {
                             print("ERROR: \(error!)")
                         }else{
-                            print("model" + fileName + "downloaded")
+                            print("refrence image " + fileName + " downloaded")
                         }
                     }
                 }
