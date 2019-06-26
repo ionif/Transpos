@@ -15,7 +15,11 @@ import FirebaseFirestore
 class ViewController: UIViewController, ARSCNViewDelegate {
     
     let storage = Storage.storage();
-    let db = Firestore.firestore()
+    let db = Firestore.firestore();
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     @IBOutlet var sceneView: ARSCNView!
     
@@ -51,15 +55,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.restartExperience()
         }
         
-        db.collection("3D-Models").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    print("\(document.documentID) => \(document.data())")
-                }
-            }
-        }
+        let settings = db.settings;
+        settings.areTimestampsInSnapshotsEnabled = true;
+        db.settings = settings;
+        
+        downloadModels();
         
     }
 
@@ -188,6 +188,34 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             .fadeOut(duration: 0.5),
             .removeFromParentNode()
             ])
+    }
+    
+    func downloadModels(){
+        db.collection("3D-Models").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    let fileName = document.documentID
+                    
+                    let storageRef = self.storage.reference();
+                    
+                    let Model = storageRef.child("3D-Model/" + fileName);
+                    
+                    // Create local filesystem URL
+                    let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                    let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
+                    let targetUrl = tempDirectory.appendingPathComponent(fileName)
+                    Model.write(toFile: targetUrl) { (url, error) in
+                        if error != nil {
+                            print("ERROR: \(error!)")
+                        }else{
+                            print("model" + fileName + "downloaded")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
