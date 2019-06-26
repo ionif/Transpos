@@ -13,8 +13,12 @@ import Firebase
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+        return true
+    }
+    /*func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         guard ARWorldTrackingConfiguration.isSupported else {
             fatalError("""
                 ARKit is not available on this device. For apps that require ARKit
@@ -25,16 +29,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 In apps where AR is an additive feature, use `isSupported` to
                 determine whether to show UI for launching AR experiences.
             """) // For details, see https://developer.apple.com/documentation/arkit
-        }
-        var window: UIWindow?
+            
         
-        func application(_ application: UIApplication,
-                         didFinishLaunchingWithOptions launchOptions:
-            [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-            FirebaseApp.configure()
-            return true
         }
+        FirebaseApp.configure()
         
         return true
-    }
+    }*/
 }
