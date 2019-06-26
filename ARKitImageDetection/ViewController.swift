@@ -156,30 +156,30 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let modelRef = Model.child(fileName)
         
         // Create local filesystem URL
-        let localURL = URL(string: "3D_models")!
-        
-        // Download to the local filesystem
-        _ = modelRef.write(toFile: localURL) { url, error in
-            if let error = error {
-                // Uh-oh, an error occurred!
-                print(error)
-            } else {
-                // Local file URL for "images/island.jpg" is returned
-                
-                guard let modelScene = SCNScene(named: fileName) else { return }
-                let modelNode = SCNNode()
-                let modelSceneChildNodes = modelScene.rootNode.childNodes
-                
-                for childNode in modelSceneChildNodes {
-                    modelNode.addChildNode(childNode)
-                }
-                
-                modelNode.position = position //z-0.2
-                modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
-                node.addChildNode(modelNode)
-                
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
+        let targetUrl = tempDirectory.appendingPathComponent(fileName)
+        modelRef.write(toFile: targetUrl) { (url, error) in
+            if error != nil {
+                print("ERROR: \(error!)")
+            }else{
+                print("modelPath.write OKAY")
             }
         }
+            // load the 3D-Model node from directory path
+            guard let modelScene = try? SCNScene(url: targetUrl, options: nil) else { return }
+            
+            let modelNode = SCNNode()
+            let modelSceneChildNodes = modelScene.rootNode.childNodes
+            
+            for childNode in modelSceneChildNodes {
+                modelNode.addChildNode(childNode)
+            }
+            
+            modelNode.position = position //z-0.2
+            modelNode.scale = SCNVector3(0.2, 0.2, 0.2)
+            node.addChildNode(modelNode)
+        
     }
     
     var imageHighlightAction: SCNAction {
