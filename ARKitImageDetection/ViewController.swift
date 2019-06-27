@@ -58,6 +58,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         downloadModels();
         downloadRefrenceImages();
         
+        uploadModel(pathToFile: "3D_models/car.dae", fileName: "car.dae")
+        uploadRefrenceImage(pathToFile: "3D_models/car.dae", fileName: "car.dae")
+        
     }
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -241,6 +244,47 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 }
             }
         }
+    }
+    
+    func uploadRefrenceImage(pathToFile: String, fileName: String){
+        
+        let localFile = URL(string: pathToFile)!
+        let storageRef = self.storage.reference();
+        
+        // Create a reference to the file you want to upload
+        let riversRef = storageRef.child("RefrenceImages/" + fileName)
+        
+        // Upload the file to the path "images/rivers.jpg"
+        let uploadTask = riversRef.putFile(from: localFile, metadata: nil) { metadata, error in
+            guard let metadata = metadata else {
+                // Uh-oh, an error occurred!
+                print("did not upload file")
+                return
+            }
+                print("upload Success!!")
+        }
+        
+        
+    }
+    
+    func uploadModel(pathToFile: String, fileName: String){
+        
+        let localFile = URL(string: pathToFile)!
+        let storageRef = self.storage.reference();
+        
+        // Create a reference to the file you want to upload
+        let riversRef = storageRef.child("3D-Model/" + fileName)
+        
+        // Upload the file to the path "images/rivers.jpg"
+        let uploadTask = riversRef.putFile(from: localFile, metadata: nil) { metadata, error in
+            guard let metadata = metadata else {
+                // Uh-oh, an error occurred!
+                print("did not upload file")
+                return
+            }
+            print("upload Success!!")
+        }
+        
     }
 }
 
