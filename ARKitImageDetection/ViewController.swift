@@ -255,8 +255,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let riversRef = storageRef.child("RefrenceImages/" + fileName)
         
         // Upload the file to the path "images/rivers.jpg"
-        let uploadTask = riversRef.putFile(from: localFile, metadata: nil) { metadata, error in
-            guard let metadata = metadata else {
+        _ = riversRef.putFile(from: localFile, metadata: nil) { metadata, error in
+            guard metadata != nil else {
                 // Uh-oh, an error occurred!
                 print("did not upload file")
                 return
@@ -276,8 +276,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let riversRef = storageRef.child("3D-Model/" + fileName)
         
         // Upload the file to the path "images/rivers.jpg"
-        let uploadTask = riversRef.putFile(from: localFile, metadata: nil) { metadata, error in
-            guard let metadata = metadata else {
+        _ = riversRef.putFile(from: localFile, metadata: nil) { metadata, error in
+            guard metadata != nil else {
                 // Uh-oh, an error occurred!
                 print("did not upload file")
                 return
