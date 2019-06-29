@@ -58,8 +58,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         downloadModels();
         downloadRefrenceImages();
         
-        uploadModel(pathToFile: "3D_models/car.dae", fileName: "car.dae")
-        uploadRefrenceImage(pathToFile: "3D_models/car.dae", fileName: "car.dae")
+        
+        //uploadModel(pathToFile: "paperPlane.scn", fileName: "paperPlane.scn")
+        //uploadRefrenceImage(pathToFile: "paperPlane.scn", fileName: "paperPlane.scn")
         
     }
 
@@ -191,10 +192,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func downloadModels(){
+        let group = DispatchGroup() // initialize
+        session.pause()
+
         db.collection("3D-Models").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
+                group.enter() // wait
+
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
                     
@@ -214,15 +220,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         }
                     }
                 }
+                group.leave() // continue the loop
             }
+        }
+        group.notify(queue: .main) {
+            // do something here when loop finished
+            self.resetTracking()
+            
         }
     }
     
     func downloadRefrenceImages(){
+        
+        let group = DispatchGroup() // initialize
+        session.pause()
+        
         db.collection("RefrenceImages").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
+                group.enter() // wait
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
                     
@@ -242,20 +259,29 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         }
                     }
                 }
+                group.leave() // continue the loop
             }
+        }
+        group.notify(queue: .main) {
+            // do something here when loop finished
+            self.resetTracking()
+            
         }
     }
     
     func uploadRefrenceImage(pathToFile: String, fileName: String){
         
-        let localFile = URL(string: pathToFile)!
         let storageRef = self.storage.reference();
         
         // Create a reference to the file you want to upload
         let riversRef = storageRef.child("RefrenceImages/" + fileName)
         
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
+        let targetUrl = tempDirectory.appendingPathComponent(fileName)
+        
         // Upload the file to the path "images/rivers.jpg"
-        _ = riversRef.putFile(from: localFile, metadata: nil) { metadata, error in
+        _ = riversRef.putFile(from: targetUrl,  metadata: nil) { metadata, error in
             guard metadata != nil else {
                 // Uh-oh, an error occurred!
                 print("did not upload file")
@@ -264,25 +290,50 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 print("upload Success!!")
         }
         
+        // Add a new document with a generated ID
+        db.collection("RefrenceImages").document(fileName).setData(["":""]) { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+            } else {
+                print("Document added")
+            }
+        }
+        
         
     }
     
     func uploadModel(pathToFile: String, fileName: String){
         
-        let localFile = URL(string: pathToFile)!
+        /*let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
+        let localFile = tempDirectory.appendingPathComponent(fileName)*/
+        
         let storageRef = self.storage.reference();
         
         // Create a reference to the file you want to upload
         let riversRef = storageRef.child("3D-Model/" + fileName)
         
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
+        let targetUrl = tempDirectory.appendingPathComponent(fileName)
+        
         // Upload the file to the path "images/rivers.jpg"
-        _ = riversRef.putFile(from: localFile, metadata: nil) { metadata, error in
+        _ = riversRef.putFile(from: targetUrl, metadata: nil) { metadata, error in
             guard metadata != nil else {
                 // Uh-oh, an error occurred!
                 print("did not upload file")
                 return
             }
             print("upload Success!!")
+        }
+        
+        // Add a new document with a generated ID
+        db.collection("3D-Models").document(fileName).setData(["":""])  { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+            } else {
+                print("Document added")
+            }
         }
         
     }
