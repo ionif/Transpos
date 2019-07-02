@@ -35,6 +35,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return sceneView.session
     }
     
+    @objc func click(sender: UIButton) {
+        let screenshot = self.sceneView.snapshot()
+        UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
+    }
     // MARK: - View Controller Life Cycle
     
     override func viewDidLoad() {
@@ -57,6 +61,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         downloadModels();
         downloadRefrenceImages();
+        
+        //setup taking pictures
+        let snapBtn = UIButton();
+        snapBtn.setTitle("Add", for: .normal)
+        snapBtn.setImage(UIImage(named: "snap2.png"), for: .normal)
+        snapBtn.frame = CGRect(x: UIScreen.main.bounds.width/2, y: 6*UIScreen.main.bounds.height/7, width: 100, height: 100)
+        snapBtn.center = CGPoint(x: UIScreen.main.bounds.width/2, y: 6*UIScreen.main.bounds.height/7)
+        self.view.addSubview(snapBtn)
+        snapBtn.addTarget(self, action: #selector(click), for: .touchUpInside)
         
         
         //uploadModel(pathToFile: "paperPlane.scn", fileName: "paperPlane.scn")
