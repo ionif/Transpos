@@ -203,6 +203,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
+                    print(fileName)
                     
                     let storageRef = self.storage.reference();
                     
@@ -242,7 +243,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 group.enter() // wait
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
-                    
+                    print(fileName)
+
                     let storageRef = self.storage.reference();
                     
                     let Model = storageRef.child("RefrenceImages/" + fileName);
