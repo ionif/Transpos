@@ -38,6 +38,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @objc func click(sender: UIButton) {
         let screenshot = self.sceneView.snapshot()
         UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
+        
+        if let wnd = self.view{
+            
+            var v = UIView(frame: wnd.bounds)
+            v.backgroundColor = UIColor.white
+            v.alpha = 1
+            
+            wnd.addSubview(v)
+            UIView.animate(withDuration: 1, animations: {
+                v.alpha = 0.0
+            }, completion: {(finished:Bool) in
+                v.removeFromSuperview()
+            })
+        }
     }
     // MARK: - View Controller Life Cycle
     
