@@ -16,6 +16,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     let storage = Storage.storage();
     let db = Firestore.firestore();
+    var refrenceImageNames: [String] = [];
+    var downloadModelNames: [String] = [];
+    
+    var dictionary: [String: String] = [:];
     
     @IBOutlet var sceneView: ARSCNView!
     
@@ -143,14 +147,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             node.addChildNode(planeNode)
             
             //sphere
-            if referenceImage.name == "iPad Pro 12.9-inch" {
+            if self.refrenceImageNames.contains(referenceImage.name!){
                 let sphere = SCNSphere(radius: 0.03)
                 let material = SCNMaterial()
                 material.diffuse.contents = UIColor.black
                 sphere.materials = [material]
-        
-                self.addModel(fileName: "paperPlane.scn", position: planeNode.position, node: node)
-
+                
+                self.addModel(fileName: self.dictionary[referenceImage.name!]!, position: planeNode.position, node: node)
             }
         }
         
@@ -204,6 +207,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             ])
     }
     
+    func merge(){
+        self.dictionary = Dictionary(uniqueKeysWithValues: zip(refrenceImageNames, downloadModelNames))
+    }
+    
     func downloadModels(){
         let group = DispatchGroup() // initialize
         session.pause()
@@ -217,6 +224,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
                     print(fileName)
+                    self.downloadModelNames.append(fileName);
                     
                     let storageRef = self.storage.reference();
                     
@@ -257,6 +265,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
                     print(fileName)
+                    self.refrenceImageNames.append(fileName);
 
                     let storageRef = self.storage.reference();
                     
