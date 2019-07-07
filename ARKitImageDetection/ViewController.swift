@@ -79,6 +79,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         downloadModels();
         downloadRefrenceImages();
+        merge();
         
         //setup taking pictures
         let snapBtn = UIButton();
