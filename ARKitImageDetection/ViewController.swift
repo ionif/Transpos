@@ -16,7 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     let storage = Storage.storage();
     let db = Firestore.firestore();
-    var refrenceImageNames: [String] = [];
+    var referenceImageNames: [String] = [];
     var downloadModelNames: [String] = [];
     
     var dictionary: [String: String] = [:];
@@ -78,8 +78,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         db.settings = settings;
         
         downloadModels();
-        downloadRefrenceImages();
+        downloadReferenceImages();
         merge();
+        print(dictionary["iPad Pro 12.9-inch"]);
         
         //setup taking pictures
         let snapBtn = UIButton();
@@ -162,7 +163,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             node.addChildNode(planeNode)
             
             //sphere
-            if self.refrenceImageNames.contains(referenceImage.name!){
+            if self.referenceImageNames.contains(referenceImage.name!){
                 let sphere = SCNSphere(radius: 0.03)
                 let material = SCNMaterial()
                 material.diffuse.contents = UIColor.black
@@ -223,7 +224,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func merge(){
-        self.dictionary = Dictionary(uniqueKeysWithValues: zip(refrenceImageNames, downloadModelNames))
+        self.dictionary = Dictionary(uniqueKeysWithValues: zip(referenceImageNames, downloadModelNames))
     }
     
     func downloadModels(){
@@ -267,12 +268,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    func downloadRefrenceImages(){
+    func downloadReferenceImages(){
         
         let group = DispatchGroup() // initialize
         session.pause()
         
-        db.collection("RefrenceImages").getDocuments() { (querySnapshot, err) in
+        db.collection("ReferenceImages").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
@@ -280,11 +281,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
                     print(fileName)
-                    self.refrenceImageNames.append(fileName);
+                    self.referenceImageNames.append(fileName);
 
                     let storageRef = self.storage.reference();
                     
-                    let Model = storageRef.child("RefrenceImages/" + fileName);
+                    let Model = storageRef.child("ReferenceImages/" + fileName);
                     
                     // Create local filesystem URL
                     let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
@@ -294,7 +295,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         if error != nil {
                             print("ERROR: \(error!)")
                         }else{
-                            print("refrence image " + fileName + " downloaded")
+                            print("reference image " + fileName + " downloaded")
                         }
                     }
                 }
@@ -308,12 +309,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    func uploadRefrenceImage(pathToFile: String, fileName: String){
+    func uploadReferenceImage(pathToFile: String, fileName: String){
         
         let storageRef = self.storage.reference();
         
         // Create a reference to the file you want to upload
-        let riversRef = storageRef.child("RefrenceImages/" + fileName)
+        let riversRef = storageRef.child("ReferenceImages/" + fileName)
         
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
@@ -330,7 +331,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
         // Add a new document with a generated ID
-        db.collection("RefrenceImages").document(fileName).setData(["":""]) { err in
+        db.collection("ReferenceImages").document(fileName).setData(["":""]) { err in
             if let err = err {
                 print("Error adding document: \(err)")
             } else {
