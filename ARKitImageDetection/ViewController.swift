@@ -292,7 +292,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     // Create local filesystem URL
                     let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
                     let tempDirectory = URL.init(fileURLWithPath: paths, isDirectory: true)
-                    let targetUrl = tempDirectory.appendingPathComponent(fileName)
+                    let targetUrl = tempDirectory.appendingPathComponent("Resources/Assets.xcassets/AR\\ Resources.arresourcegroup/" + fileName)
                     Model.write(toFile: targetUrl) { (url, error) in
                         if error != nil {
                             print("ERROR: \(error!)")
@@ -312,7 +312,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     // Create local filesystem URL
                     let newPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
                     let newTempDirectory = URL.init(fileURLWithPath: newPaths, isDirectory: true)
-                    let newTargetUrl = newTempDirectory.appendingPathComponent(fileName)
+                    let newTargetUrl = newTempDirectory.appendingPathComponent("3D_models/" + fileName)
                     modelPath.write(toFile: newTargetUrl) { (url, error) in
                         if error != nil {
                             print("ERROR: \(error!)")
