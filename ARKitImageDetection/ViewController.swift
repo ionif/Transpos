@@ -77,9 +77,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         settings.areTimestampsInSnapshotsEnabled = true;
         db.settings = settings;
         
-        downloadModels();
         downloadReferenceImages();
-        merge();
         print(dictionary["iPad Pro 12.9-inch"]);
         
         //setup taking pictures
@@ -169,6 +167,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 material.diffuse.contents = UIColor.black
                 sphere.materials = [material]
                 
+                print("model selected: " + self.dictionary[referenceImage.name!]!)
+                
                 self.addModel(fileName: self.dictionary[referenceImage.name!]!, position: planeNode.position, node: node)
             }
         }
@@ -225,6 +225,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func merge(){
         self.dictionary = Dictionary(uniqueKeysWithValues: zip(referenceImageNames, downloadModelNames))
+        print(dictionary);
     }
     
     func downloadModels(){
@@ -240,7 +241,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
                     print(fileName)
-                    self.downloadModelNames.append(fileName);
+                    self.downloadModelNames.append(fileName.trimmingCharacters(in: .whitespacesAndNewlines));
                     
                     let storageRef = self.storage.reference();
                     
@@ -273,6 +274,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let group = DispatchGroup() // initialize
         session.pause()
         
+        print("starting refrence image download........")
         db.collection("ReferenceImages").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -281,7 +283,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 for document in querySnapshot!.documents {
                     let fileName = document.documentID
                     print(fileName)
-                    self.referenceImageNames.append(fileName);
+                    self.referenceImageNames.append(fileName.trimmingCharacters(in: .whitespacesAndNewlines));
 
                     let storageRef = self.storage.reference();
                     
@@ -298,7 +300,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             print("reference image " + fileName + " downloaded")
                         }
                     }
+                    
+                    let docData = document.data();
+                    
+                    let modelName = docData["3D-Model"] as? String ?? ""
+                    
+                    self.downloadModelNames.append(modelName.trimmingCharacters(in: .whitespacesAndNewlines));
+                    
+                    let modelPath = storageRef.child("3D-Model/" + modelName);
+                    
+                    // Create local filesystem URL
+                    let newPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                    let newTempDirectory = URL.init(fileURLWithPath: newPaths, isDirectory: true)
+                    let newTargetUrl = newTempDirectory.appendingPathComponent(fileName)
+                    modelPath.write(toFile: newTargetUrl) { (url, error) in
+                        if error != nil {
+                            print("ERROR: \(error!)")
+                        }else{
+                            print("model " + modelName + " downloaded")
+                        }
+                    }
                 }
+                
+                self.dictionary = Dictionary(uniqueKeysWithValues: zip(self.referenceImageNames, self.downloadModelNames))
+                print(self.dictionary);
+                
                 group.leave() // continue the loop
             }
         }
