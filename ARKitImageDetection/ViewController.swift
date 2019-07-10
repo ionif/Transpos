@@ -323,8 +323,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         }
                     }
                     
-                    print("starting model download........")
+
                     maingroup.notify(queue: .main, execute: {
+                        print("starting model download........")
                         let docData = document.data();
                         
                         let modelName = docData["3D-Model"] as? String ?? ""
@@ -334,7 +335,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         // Create local filesystem URL
                         let newPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
                         let newTempDirectory = URL.init(fileURLWithPath: newPaths, isDirectory: true)
-                        let newTargetUrl = newTempDirectory.appendingPathComponent("3D_models/" + fileName)
+                        let newTargetUrl = newTempDirectory.appendingPathComponent("3D_models/" + modelName)
                         modelPath.write(toFile: newTargetUrl) { (url, error) in
                             if error != nil {
                                 print("ERROR: \(error!)")
@@ -348,7 +349,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     })
                 }
                 
-                group.notify(queue: .main, execute: {
+                group.notify(queue: .main) {
                     print("Finished all requests.")
                     print(customReferenceSet)
                     
@@ -358,7 +359,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     self.statusViewController.scheduleMessage("Look around to detect images", inSeconds: 7.5, messageType: .contentPlacement)
 
                     self.merge()
-                })
+                }
 
                 }
             }
