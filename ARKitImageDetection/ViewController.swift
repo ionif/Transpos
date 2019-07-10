@@ -311,7 +311,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             
                             let arImage = ARReferenceImage(image!.cgImage!,
                                                            orientation: CGImagePropertyOrientation.up,
-                                                           physicalWidth: 0.038)
+                                                           physicalWidth: 0.015)
                             arImage.name = fileName
                             
                             customReferenceSet.insert(arImage)
