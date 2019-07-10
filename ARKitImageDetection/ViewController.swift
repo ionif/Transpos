@@ -291,9 +291,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     maingroup.enter()
 
                     let fileName = document.documentID
-                    print(fileName)
-                    self.referenceImageNames.append(fileName.trimmingCharacters(in: .whitespacesAndNewlines));
-
                     let storageRef = self.storage.reference();
                     
                     let Model = storageRef.child("ReferenceImages/" + fileName);
