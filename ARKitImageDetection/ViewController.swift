@@ -278,10 +278,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             } else {
                 let configuration = ARWorldTrackingConfiguration()
                 print("starting refrence image download........")
+                let maingroup = DispatchGroup()
                 for document in querySnapshot!.documents {
-                    group.enter() // wait
-                    
-                    let maingroup = DispatchGroup()
                     maingroup.enter()
                     
                     let fileName = document.documentID
@@ -320,9 +318,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             
                         }
                     }
-                    
+                }
+                for document in querySnapshot!.documents {
                     maingroup.notify(queue: .main, execute: {
                         print("starting model download........")
+                        group.enter() // wait
+                        
+                        let storageRef = self.storage.reference();
+                        
                         let docData = document.data();
                         
                         let modelName = docData["3D-Model"] as? String ?? ""
@@ -332,7 +335,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         // Create local filesystem URL
                         let newPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
                         let newTempDirectory = URL.init(fileURLWithPath: newPaths, isDirectory: true)
-                        let newTargetUrl = newTempDirectory.appendingPathComponent("3D_models/" + fileName)
+                        let newTargetUrl = newTempDirectory.appendingPathComponent("3D_models/" + modelName)
                         modelPath.write(toFile: newTargetUrl) { (url, error) in
                             if error != nil {
                                 print("ERROR: \(error!)")
@@ -340,11 +343,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                 self.downloadModelNames.append(modelName.trimmingCharacters(in: .whitespacesAndNewlines));
                                 print("model " + modelName + " downloaded")
                                 group.leave() // continue the loop
-                               
+                                
                             }
                         }
                     })
                 }
+                
                 group.notify(queue: .main) {
                     print("Finished all requests.")
                     print(customReferenceSet)
