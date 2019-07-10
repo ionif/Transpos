@@ -77,6 +77,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         settings.areTimestampsInSnapshotsEnabled = true;
         db.settings = settings;
         
+        downloadReferenceImages();
+        print(dictionary["iPad Pro 12.9-inch"]);
         
         //setup taking pictures
         let snapBtn = UIButton();
@@ -100,10 +102,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 		UIApplication.shared.isIdleTimerDisabled = true
 
         // Start the AR experience
-        //resetTracking()
-        
-        downloadReferenceImages();
-
+        resetTracking()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -121,7 +120,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /// - Tag: ARReferenceImage-Loading
 	func resetTracking() {
         
+        guard let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) else {
+            fatalError("Missing expected asset catalog resources.")
+        }
+        
         let configuration = ARWorldTrackingConfiguration()
+        configuration.detectionImages = referenceImages
         session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
 
         statusViewController.scheduleMessage("Look around to detect images", inSeconds: 7.5, messageType: .contentPlacement)
@@ -269,19 +273,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // initialize
         session.pause()
+         let group = DispatchGroup()
         var customReferenceSet = Set<ARReferenceImage>()
         print("starting download........")
         db.collection("ReferenceImages").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
+
                 let configuration = ARWorldTrackingConfiguration()
                 print("starting refrence image download........")
-                let maingroup = DispatchGroup()
                 for document in querySnapshot!.documents {
-                    maingroup.enter()
                     
+                    group.enter() // wait
+                    
+                    let maingroup = DispatchGroup()
+                    maingroup.enter()
+
                     let fileName = document.documentID
+                    print(fileName)
+                    self.referenceImageNames.append(fileName.trimmingCharacters(in: .whitespacesAndNewlines));
 
                     let storageRef = self.storage.reference();
                     
@@ -305,8 +316,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             let image = UIImage(data: imageData)
                             
                             let arImage = ARReferenceImage(image!.cgImage!,
-                                                       orientation: CGImagePropertyOrientation.up,
-                                                       physicalWidth: 0.038)
+                                                           orientation: CGImagePropertyOrientation.up,
+                                                           physicalWidth: 0.038)
                             arImage.name = fileName
                             
                             customReferenceSet.insert(arImage)
@@ -317,16 +328,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             
                         }
                     }
-                }
-                let group = DispatchGroup()
-                maingroup.notify(queue: .main, execute: {
-                    print("starting model download........")
                     
-                    for document in querySnapshot!.documents {
-                        group.enter() // wait
-                        
-                        let storageRef = self.storage.reference();
-                        
+                    print("starting model download........")
+                    maingroup.notify(queue: .main, execute: {
                         let docData = document.data();
                         
                         let modelName = docData["3D-Model"] as? String ?? ""
@@ -336,7 +340,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         // Create local filesystem URL
                         let newPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
                         let newTempDirectory = URL.init(fileURLWithPath: newPaths, isDirectory: true)
-                        let newTargetUrl = newTempDirectory.appendingPathComponent("3D_models/" + modelName)
+                        let newTargetUrl = newTempDirectory.appendingPathComponent("3D_models/" + fileName)
                         modelPath.write(toFile: newTargetUrl) { (url, error) in
                             if error != nil {
                                 print("ERROR: \(error!)")
@@ -347,8 +351,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                 
                             }
                         }
-                    }
-                })
+                    })
+                }
                 
                 group.notify(queue: .main, execute: {
                     print("Finished all requests.")
@@ -358,11 +362,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     
                     self.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
                     self.statusViewController.scheduleMessage("Look around to detect images", inSeconds: 7.5, messageType: .contentPlacement)
-                    
+
                     self.merge()
                 })
+
+                }
             }
-        }
     }
     
     func uploadReferenceImage(pathToFile: String, fileName: String){
@@ -432,14 +437,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
         }
         
-    }
-    
-    func convertCIImageToCGImage(inputImage: CIImage) -> CGImage? {
-        let context = CIContext(options: nil)
-        if let cgImage = context.createCGImage(inputImage, from: inputImage.extent) {
-            return cgImage
-        }
-        return nil
     }
 }
 
