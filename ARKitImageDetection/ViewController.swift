@@ -319,9 +319,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         }
                     }
                 }
-                for document in querySnapshot!.documents {
-                    maingroup.notify(queue: .main, execute: {
-                        print("starting model download........")
+                maingroup.notify(queue: .main, execute: {
+                    print("starting model download........")
+                    for document in querySnapshot!.documents {
                         group.enter() // wait
                         
                         let storageRef = self.storage.reference();
@@ -346,8 +346,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                 
                             }
                         }
-                    })
-                }
+                    }
+                })
                 
                 group.notify(queue: .main) {
                     print("Finished all requests.")
