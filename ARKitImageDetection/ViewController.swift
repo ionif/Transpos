@@ -77,9 +77,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         settings.areTimestampsInSnapshotsEnabled = true;
         db.settings = settings;
         
-        downloadReferenceImages();
-        print(dictionary["iPad Pro 12.9-inch"]);
-        
         //setup taking pictures
         let snapBtn = UIButton();
         snapBtn.setTitle("Add", for: .normal)
@@ -102,7 +99,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 		UIApplication.shared.isIdleTimerDisabled = true
 
         // Start the AR experience
-        resetTracking()
+        downloadReferenceImages()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -119,13 +116,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     /// Creates a new AR configuration to run on the `session`.
     /// - Tag: ARReferenceImage-Loading
 	func resetTracking() {
-        
+        /*
         guard let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) else {
             fatalError("Missing expected asset catalog resources.")
         }
         
         let configuration = ARWorldTrackingConfiguration()
-        configuration.detectionImages = referenceImages
+        configuration.detectionImages = referenceImages*/
+        let configuration = ARWorldTrackingConfiguration()
         session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
 
         statusViewController.scheduleMessage("Look around to detect images", inSeconds: 7.5, messageType: .contentPlacement)
@@ -264,7 +262,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         group.notify(queue: .main) {
             // do something here when loop finished
-            self.resetTracking()
             
         }
     }
