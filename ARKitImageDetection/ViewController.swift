@@ -267,10 +267,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func downloadReferenceImages(){
         
-        let group = DispatchGroup() // initialize
+        // initialize
         session.pause()
         var customReferenceSet = Set<ARReferenceImage>()
-        
         print("starting download........")
         db.collection("ReferenceImages").getDocuments() { (querySnapshot, err) in
             if let err = err {
@@ -319,8 +318,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         }
                     }
                 }
+                let group = DispatchGroup()
                 maingroup.notify(queue: .main, execute: {
                     print("starting model download........")
+                    
                     for document in querySnapshot!.documents {
                         group.enter() // wait
                         
@@ -349,7 +350,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     }
                 })
                 
-                group.notify(queue: .main) {
+                group.notify(queue: .main, execute: {
                     print("Finished all requests.")
                     print(customReferenceSet)
                     
@@ -359,7 +360,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     self.statusViewController.scheduleMessage("Look around to detect images", inSeconds: 7.5, messageType: .contentPlacement)
                     
                     self.merge()
-                }
+                })
             }
         }
     }
