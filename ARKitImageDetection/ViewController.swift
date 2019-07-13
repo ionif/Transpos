@@ -301,7 +301,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             print("ERROR: \(error!)")
                         }else{
                             print(url)
-                            self.referenceImageNames.append(fileName.trimmingCharacters(in: .whitespacesAndNewlines));
+                            self.referenceImageNames.insert(fileName.trimmingCharacters(in: .whitespacesAndNewlines), at: 0);
+                            print(self.referenceImageNames)
                             
                             //5. Name The Image
                             
@@ -310,7 +311,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             let image = UIImage(data: imageData)
                             
                             let arImage = ARReferenceImage(image!.cgImage!,
-                                                           orientation: CGImagePropertyOrientation.up,
+                                                           orientation: CGImagePropertyOrientation.left,
                                                            physicalWidth: 0.038)
                             arImage.name = fileName
                             
@@ -341,6 +342,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                 print("ERROR: \(error!)")
                             }else{
                                 self.downloadModelNames.append(modelName.trimmingCharacters(in: .whitespacesAndNewlines));
+                                print(self.downloadModelNames)
                                 print("model " + modelName + " downloaded")
                                 group.leave() // continue the loop
                                 
